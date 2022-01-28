@@ -1,0 +1,34 @@
+@import './base.scss';
+@import './mixin.scss';
+@import './variable.scss';
+//设置body的默认字体和字体大小
+body {
+  color: #323232;
+  font-size: 32px;
+  font-style: normal;
+  font-family: 'PingFang SC', Helvetica, 'STHeiti STXihei', 'Microsoft YaHei', Tohoma, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // ios 微信字体放大处理
+  -webkit-text-size-adjust: 100% !important;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea {
+  border: 0;
+  -webkit-appearance: none; //可同时屏蔽输入框怪异的内阴影,解决iOS下无法修改按钮样式,测试还发现,加了此属性后,iOS下默认还是有圆角的,不过可以用border-radius属性修改
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

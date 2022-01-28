@@ -1,0 +1,35 @@
+{
+  "name": "vite-demo",
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "vite lint",
+    "preview": "vite preview",
+    "serve:D": "vite --mode development",
+    "serve:T": "vite --mode test",
+    "build:T": "vite build --mode test",
+    "build:R": "vite build --mode production"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "normalize.css": "^8.0.1",
+    "pinia": "^2.0.9",
+    "vant": "^3.4.2",
+    "vconsole": "^3.11.0",
+    "vue": "^3.2.25",
+    "vue-router": "^4.0.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^8.7.0",
+    "eslint-plugin-vue": "^8.3.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.2.1",
+    "postcss-px2vp": "^1.1.2",
+    "sass": "^1.49.0",
+    "sass-loader": "^12.4.0",
+    "vite": "^2.7.13",
+    "vite-plugin-style-import": "^1.4.1"
+  }
+}

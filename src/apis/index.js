@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-08-24 11:58:10
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 13:38:08
+ * @LastEditTime: 2022-04-21 17:34:59
  */
 /*
  * @Description:统一管理所有api地址、对应的请求方式及自定义别名
@@ -24,43 +24,43 @@
  * let xx = await this.$api.getBanner({}, {timeout: 1000, headers:{ aaa: 111 }})
  */
 
-import { request } from '../utils/request/index';
+import { request } from '../utils/request/index'
 const modulesFiles = import.meta.globEager('./modules/*.js')
 
 // 自动引入module包
-const apiMap = Object.entries(modulesFiles).reduce((modules, [modulePath,value]) => {
-  const name = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1').split('modules/')[1];
-    modules[name] = value.default;
-    return modules
-}, {});
+const apiMap = Object.entries(modulesFiles).reduce((modules, [modulePath, value]) => {
+  const name = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1').split('modules/')[1]
+  modules[name] = value.default
+  return modules
+}, {})
 
-
-let apiModulesMap = {}; // api模块化之后的对象
+let apiModulesMap = {} // api模块化之后的对象
 const injectRequest = (apiObj) => {
-  return dealWithApi(apiObj, apiModulesMap);
-};
+  return dealWithApi(apiObj, apiModulesMap)
+}
 
 // 封装处理apiMap
 const dealWithApi = (apiObj, modulesMap) => {
   Object.keys(apiObj).forEach((alias) => {
-    let { method, url, config } = apiObj[alias];
+    let { method, url, config } = apiObj[alias]
+
     if (url) {
-      method = method.toUpperCase();
+      method = method.toUpperCase()
       modulesMap[alias] = (dataOrParams = {}, instanceConf = {}) => {
-        const keyName = ['PUT', 'POST', 'PATCH'].includes(method) ? 'data' : 'params';
+        const keyName = ['PUT', 'POST', 'PATCH'].includes(method) ? 'data' : 'params'
         return request({
           method,
           url,
           [keyName]: dataOrParams,
-          ...Object.assign(config || {}, instanceConf),
-        });
-      };
+          ...Object.assign(config || {}, instanceConf)
+        })
+      }
     } else {
-      modulesMap[alias] = {};
-      dealWithApi(apiObj[alias], modulesMap[alias]);
+      modulesMap[alias] = {}
+      dealWithApi(apiObj[alias], modulesMap[alias])
     }
-  });
-  return apiModulesMap;
-};
+  })
+  return apiModulesMap
+}
 
-export default injectRequest(apiMap);
+export default injectRequest(apiMap)

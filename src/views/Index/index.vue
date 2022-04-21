@@ -4,13 +4,13 @@
  * @Author: Linyer
  * @Date: 2021-02-23 10:27:42
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 15:03:52
+ * @LastEditTime: 2022-04-21 17:17:38
 -->
 <template>
   <div class="container">
     <l-header class="header"></l-header>
     <l-search class="search"></l-search>
-    <div class="content">
+    <!-- <div class="content">
       <van-button @click="targetTo" type="primary">跳转到C页面</van-button>
       <van-button @click="handleUserInfo" type="primary">改变userInfo</van-button>
       <ul class="item" v-for="student in students" :key="student.name">
@@ -36,7 +36,7 @@
           </van-button>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -58,13 +58,23 @@ export default defineComponent({
     provide('userInfo', userInfo)
     // 模拟接口请求
     const getUserInfo = () => {
-      api.userInfo.getUserInfo().then((res) => {
-        Object.keys(res).forEach((key) => {
-          userInfo[key] = res[key]
+      api.userInfo
+        .getUserInfo({ productionOrderId: '1880640984537674079' })
+        .then((res) => {
+          console.log(
+            '%c [  ]-65-「index」',
+            'font-size:13px; background:pink; color:#bf2c9f;',
+            res
+          )
+          Object.keys(res).forEach((key) => {
+            userInfo[key] = res[key]
+          })
         })
-      })
+        .catch((err) => {
+          console.log(err)
+        })
     }
-    getUserInfo()
+    // getUserInfo()
 
     // 模拟数据请求
     const getList = () => {
@@ -168,11 +178,21 @@ export default defineComponent({
      * 获取用户信息
      */
     async getUserInfo() {
-      const res = await this.$api.userInfo.getUserInfo()
-      Object.keys(res).forEach((key) => {
-        this.userInfo[key] = res[key]
+      const res = await this.$api.userInfo.getUserInfo({ productionOrderId: '1880640984537674070' })
+
+      console.log('%c [  ]-173-「index」', 'font-size:13px; background:pink; color:#bf2c9f;', res)
+      if (res) {
+        Object.keys(res).forEach((key) => {
+          this.userInfo[key] = res[key]
+        })
+        console.log('[ res ]', res)
+      }
+      const postRes = await this.$api.userInfo.postUserInfo({
+        orderDetailId: '1773640223528512930'
       })
-      console.log('[ res ]', res)
+      if (postRes) {
+        console.log('%c [  ]-193-「index」', 'font-size:13px; background:pink; color:#bf2c9f;', res)
+      }
     },
     /**
      * 计算总分

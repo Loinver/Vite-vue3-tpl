@@ -4,13 +4,14 @@
  * @Author: Linyer
  * @Date: 2022-01-10 16:44:06
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 17:11:38
+ * @LastEditTime: 2022-02-11 15:52:15
  */
 import { defineConfig, UserConfigExport, ConfigEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import styleImport, { VantResolve } from 'vite-plugin-style-import'
-import px2vp from 'postcss-px2vp'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 /**
  * 根据环境变量设置输出目录
@@ -49,36 +50,16 @@ export default ({ mode, command } = ConfigEnv) => {
     },
     plugins: [
       vue(),
-      styleImport({
-        resolves: [VantResolve()]
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()]
       })
     ],
     css: {
       postcss: {
-        plugins: [
-          require('autoprefixer'),
-          px2vp({
-            //视窗的宽度，对应的是我们设计稿的宽度，一般是750
-            viewportWidth(rule) {
-              const file = rule.source?.input.file
-              // 根据文件名动态配置viewport width
-              if (file?.includes('vant')) return 375
-              return 750
-            },
-            viewportHeight: 1334, // 视窗的高度，根据750设备的宽度来指定，一
-            unitToConvert: 'px', // 要转化的单位
-            unitPrecision: 6, // 转换后的精度，即小数点位数
-            propList: ['*'], // 指定转换的css属性的单位，*代表全部css属性的单位都进行转换
-            viewportUnit: 'vw', // 指定需要转换成的视窗单位，默认vw
-            fontViewportUnit: 'vw', // 指定字体需要转换成的视窗单位，默认vw
-            selectorBlackList: [], // 指定不转换为视窗单位的类名，
-            minPixelValue: 1, // 默认值1，小于或等于1px则不进行转换
-            mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false
-            // replace: true, // 是否转换后直接更换属性值
-            // exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配
-            landscape: false // 是否处理横屏情况
-          })
-        ]
+        plugins: [require('autoprefixer')]
       }
     },
     server: {

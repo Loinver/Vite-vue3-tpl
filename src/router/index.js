@@ -4,17 +4,17 @@
  * @Author: Linyer
  * @Date: 2021-03-31 10:27:05
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 15:06:46
+ * @LastEditTime: 2022-02-11 16:13:16
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
     path: '/',
-    redirect: '/index.html'
+    redirect: '/index'
   },
   {
-    path: '/index.html',
+    path: '/index',
     name: 'Index',
     component: () => import('../views/Index/index.vue'),
     meta: {
@@ -24,9 +24,9 @@ const routes = [
     }
   },
   {
-    path: '/c.html',
-    name: 'C',
-    component: () => import('../views/C/index.vue'),
+    path: '/table',
+    name: 'table',
+    component: () => import('../views/table/index.vue'),
     meta: {
       auth: false,
       title: 'c',
@@ -37,7 +37,7 @@ const routes = [
     // 匹配所有路径  vue2使用*   vue3使用/:pathMatch(.*)*或/:pathMatch(.*)或/:catchAll(.*)
     path: '/:pathMatch(.*)*',
     name: '404',
-    redirect: '/index.html'
+    redirect: '/index'
   }
 ]
 const modulesFiles = import.meta.globEager('./modules/*.js')
@@ -50,4 +50,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [...routes, ...moduleRoutes]
 })
+router.afterEach((to) => {
+  document.title = to.meta.title
+})
+
 export default router

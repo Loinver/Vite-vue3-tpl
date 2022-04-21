@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-02-23 10:27:42
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 15:03:52
+ * @LastEditTime: 2022-02-11 16:14:32
 -->
 <template>
   <div class="container">
@@ -161,7 +161,7 @@ export default defineComponent({
   methods: {
     targetTo() {
       this.$router.push({
-        path: 'c.html'
+        path: 'sku'
       })
     },
     /**

@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-02-23 10:27:42
  * @LastEditors: Linyer
- * @LastEditTime: 2022-04-21 17:17:38
+ * @LastEditTime: 2022-04-22 10:01:16
 -->
 <template>
   <div class="container">
@@ -180,7 +180,6 @@ export default defineComponent({
     async getUserInfo() {
       const res = await this.$api.userInfo.getUserInfo({ productionOrderId: '1880640984537674070' })
 
-      console.log('%c [  ]-173-「index」', 'font-size:13px; background:pink; color:#bf2c9f;', res)
       if (res) {
         Object.keys(res).forEach((key) => {
           this.userInfo[key] = res[key]

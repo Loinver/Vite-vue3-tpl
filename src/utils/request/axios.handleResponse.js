@@ -4,10 +4,10 @@
  * @Author: Linyer
  * @Date: 2021-09-02 08:58:06
  * @LastEditors: Linyer
- * @LastEditTime: 2022-04-21 17:00:51
+ * @LastEditTime: 2022-04-22 09:58:51
  */
 
-import axios from 'axios'
+import { request } from './index'
 import { againRequest } from './axios.againRequest.js'
 
 const errorCode = {
@@ -24,7 +24,7 @@ export default (response) => {
     if (realStatus === 200) {
       return response.data.data
     } else {
-      againRequest(response, axios)
+      againRequest(response, request)
       return errorCode[response.data.code]
     }
   }

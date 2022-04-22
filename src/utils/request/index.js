@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-07-21 17:27:29
  * @LastEditors: Linyer
- * @LastEditTime: 2022-04-21 18:09:49
+ * @LastEditTime: 2022-04-22 10:00:39
  */
 import axios from 'axios'
 import setConfig from './axios.setConfig.js'
@@ -44,6 +44,7 @@ const requestInterceptorId = request.interceptors.request.use(
   (config) => {
     // 对于异常的响应也需要在pendingPool中将其删除，但响应拦截器中的异常响应有些获取不到请求信息，这里将其保存在实例上
     request.config = Object.assign({}, config)
+
     // 在发送请求之前做些什么
     config.cancelToken = new axios.CancelToken((cancelFn) => {
       pendingPool.has(config.url)
@@ -53,7 +54,6 @@ const requestInterceptorId = request.interceptors.request.use(
     return config
   },
   (err) => {
-    console.log('%c [ 请求错误拦截 ]', 'font-size:13px; background:pink; color:#bf2c9f;', err)
     // 对请求错误做些什么
     return Promise.reject(err)
   }
@@ -64,14 +64,13 @@ const requestInterceptorId = request.interceptors.request.use(
 const responseInterceptorId = request.interceptors.response.use(
   (response) => {
     const { config } = response
-    pendingPool.delete(config.url)
     console.log('%c [ 正常响应结果 ]', 'font-size:13px; background:pink; color:#bf2c9f;', response)
+    pendingPool.delete(config.url)
     return Promise.resolve(handleResponse(response))
   },
   // 对异常响应处理
   (err) => {
     const { config } = request
-
     console.log('%c [ 异常响应结果 ]', 'font-size:13px; background:pink; color:#bf2c9f;', err)
     if (!axios.isCancel(err)) {
       pendingPool.delete(config.url)

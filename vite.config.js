@@ -4,13 +4,14 @@
  * @Author: Linyer
  * @Date: 2022-01-10 16:44:06
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 17:11:38
+ * @LastEditTime: 2022-08-22 18:23:05
  */
 import { defineConfig, UserConfigExport, ConfigEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
-import styleImport, { VantResolve } from 'vite-plugin-style-import'
 import px2vp from 'postcss-px2vp'
+import Components from 'unplugin-vue-components/vite'
+import { VantResolver } from 'unplugin-vue-components/resolvers'
 
 /**
  * 根据环境变量设置输出目录
@@ -49,8 +50,8 @@ export default ({ mode, command } = ConfigEnv) => {
     },
     plugins: [
       vue(),
-      styleImport({
-        resolves: [VantResolve()]
+      Components({
+        resolvers: [VantResolver()]
       })
     ],
     css: {

@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-03-31 10:22:38
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 14:52:26
+ * @LastEditTime: 2022-08-23 10:55:44
  */
 import { createApp } from 'vue'
 import 'normalize.css'
@@ -15,9 +15,10 @@ import store from './store'
 import api from './apis'
 
 import { Toast, Dialog, Button, List, Cell, Search, NavBar, Calendar, DatetimePicker } from 'vant'
+
+import 'vant/lib/index.css'
+
 const app = createApp(App)
-app.config.globalProperties.$api = api // api绑定到this上
-app.config.globalProperties.$toast = Toast
 // 挂载组件
 app
   .use(Toast)
@@ -29,5 +30,9 @@ app
   .use(NavBar)
   .use(Calendar)
   .use(DatetimePicker)
+
+app.config.globalProperties.$api = api // api绑定到this上
+app.config.globalProperties.$toast = Toast
+
 // 挂载路由及状态存储
 app.use(router).use(store).mount('#app')

@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-03-31 10:27:05
  * @LastEditors: Linyer
- * @LastEditTime: 2022-01-27 15:06:46
+ * @LastEditTime: 2022-08-11 09:36:15
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -30,6 +30,16 @@ const routes = [
     meta: {
       auth: false,
       title: 'c',
+      keepAlive: true
+    }
+  },
+  {
+    path: '/interactScore.html',
+    name: 'InteractScore',
+    component: () => import('../views/interactScore/index.vue'),
+    meta: {
+      auth: false,
+      title: '回家过年',
       keepAlive: true
     }
   },

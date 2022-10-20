@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-02-23 10:27:42
  * @LastEditors: Linyer
- * @LastEditTime: 2022-08-23 10:56:17
+ * @LastEditTime: 2022-10-13 18:05:23
 -->
 
 <script setup>
@@ -42,8 +42,8 @@ onMounted(() => {
   const OBSTACLE_STEP = windowHeight / 1.5 // 障碍物距离
   const maxObjWidth = Math.round(windowWidth * 0.2)
   const maxObjHeight = Math.round(windowHeight * 0.2)
-  const MEN_WIDTH = 67
-  const MEN_HEIGHT = 134
+  const MAN_WIDTH = 67
+  const MAN_HEIGHT = 134
   const canvas = document.getElementById('canvas') // 背景的画布
   const canvasCtx = canvas.getContext('2d')
   canvas.width = windowWidth
@@ -60,7 +60,7 @@ onMounted(() => {
       image.src = nothing
       return image
     })(), // 空白图片
-    objType: [
+    fallingObjectsSource: [
       {
         type: 0,
         score: -100,
@@ -98,9 +98,9 @@ onMounted(() => {
         })()
       } // 加分
     ], // 掉落的物品源数组
-    maxNumber: 4, //最多4种加减分元素
-    downObj: [], // 生成的掉落的物品对象数组
-    bgObj: {
+    maxFallingType: 4, //最多4种加减分元素
+    fallingObjects: [], // 生成的掉落的物品对象数组
+    backgroundObj: {
       width: windowWidth,
       height: windowHeight * 2,
       left: 0,
@@ -111,11 +111,11 @@ onMounted(() => {
         return image
       })()
     }, // 背景配置
-    menObj: {
-      width: MEN_WIDTH,
-      height: MEN_HEIGHT,
-      left: (windowWidth - MEN_WIDTH) / 2,
-      top: canvas.height - MEN_HEIGHT,
+    manObj: {
+      width: MAN_WIDTH,
+      height: MAN_HEIGHT,
+      left: (windowWidth - MAN_WIDTH) / 2,
+      top: canvas.height - MAN_HEIGHT,
       imgSrc: (() => {
         const image = new Image()
         image.src = boy
@@ -136,16 +136,17 @@ onMounted(() => {
     initState: function () {
       // 渲染背景图
       canvasCtx.drawImage(
-        this.bgObj.imgSrc,
-        this.bgObj.left,
-        this.bgObj.top,
-        this.bgObj.width,
-        this.bgObj.height
+        this.backgroundObj.imgSrc,
+        this.backgroundObj.left,
+        this.backgroundObj.top,
+        this.backgroundObj.width,
+        this.backgroundObj.height
       )
       // 生成掉落的物品对象配置参数
-      for (let i = 0; i < this.maxNumber; i++) {
-        let type = this.objType[Math.floor(Math.random() * game.objType.length)]
-        this.downObj.push({
+      for (let i = 0; i < this.maxFallingType; i++) {
+        let type =
+          this.fallingObjectsSource[Math.floor(Math.random() * this.fallingObjectsSource.length)]
+        this.fallingObjects.push({
           left: parseInt(Math.random() * (windowWidth - maxObjWidth)), // x轴随机位置
           top: i * OBSTACLE_STEP - 1000, // 顶部位置，先不在视图区域
           type: type.type,
@@ -158,78 +159,76 @@ onMounted(() => {
       }
     },
     // 展示信息
-    showInfo: function (type) {
-      if (type === 1) {
-        global.$toast('加分')
-      } else {
-        global.$toast('减分')
-      }
+    showInfo: function (obj) {
+      global.$toast(`${obj.type > 0 ? '加' : '减'}${obj.score}分`)
     },
     // 游戏开始  绘制开始
     drawStart: function () {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height)
       canvasBufferCtx.clearRect(0, 0, canvas.width, canvas.height)
       canvasBufferCtx.drawImage(
-        this.bgObj.imgSrc,
-        this.bgObj.left,
-        this.bgObj.top,
-        this.bgObj.width,
-        this.bgObj.height
+        this.backgroundObj.imgSrc,
+        this.backgroundObj.left,
+        this.backgroundObj.top,
+        this.backgroundObj.width,
+        this.backgroundObj.height
       )
-      for (let i = 0; i < this.downObj.length; i++) {
+      for (let i = 0; i < this.fallingObjects.length; i++) {
         canvasBufferCtx.drawImage(
-          this.downObj[i].imgSrc,
-          this.downObj[i].left,
-          this.downObj[i].top,
+          this.fallingObjects[i].imgSrc,
+          this.fallingObjects[i].left,
+          this.fallingObjects[i].top,
           maxObjWidth,
           maxObjWidth
         )
       }
       canvasBufferCtx.drawImage(
-        this.menObj.imgSrc,
-        this.menObj.left,
-        this.menObj.top,
-        this.menObj.width,
-        this.menObj.height
+        this.manObj.imgSrc,
+        this.manObj.left,
+        this.manObj.top,
+        this.manObj.width,
+        this.manObj.height
       )
       canvasCtx.drawImage(canvasBuffer, 0, 0)
-      game.update()
+      this.update()
     },
     // 绘制小人
-    drawMenObj: function () {
+    drawManObj: function () {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height)
       canvasBufferCtx.clearRect(0, 0, canvas.width, canvas.height)
       canvasBufferCtx.drawImage(
-        this.menObj.imgSrc,
-        this.menObj.left,
-        this.menObj.top,
-        this.menObj.width,
-        this.menObj.height
+        this.manObj.imgSrc,
+        this.manObj.left,
+        this.manObj.top,
+        this.manObj.width,
+        this.manObj.height
       )
       canvasCtx.drawImage(canvasBuffer, 0, 0)
     },
     // 更新位置
     update: function () {
-      this.bgObj.top += gameConfig.speed
-      if (this.bgObj.top >= 0) {
-        this.bgObj.top = -windowHeight
+      this.backgroundObj.top += gameConfig.speed
+      if (this.backgroundObj.top >= 0) {
+        this.backgroundObj.top = -windowHeight
       }
-      for (let i = 0; i < this.downObj.length; i++) {
-        let $this = game.downObj[i]
+      for (let i = 0; i < this.fallingObjects.length; i++) {
+        let $this = this.fallingObjects[i]
         $this.top += gameConfig.speed
-        if (this.impact($this, this.menObj) && !$this.isImpact) {
+        if (this.impact($this, this.manObj) && !$this.isImpact) {
           if ($this.type === 0) {
             // 踩到香蕉皮,摔倒了
-            this.menObj.imgSrc = this.menObj.tumbleSrc
-            this.menObj.left = this.menObj.left - 10
-            this.menObj.top = canvas.height - MEN_HEIGHT * 1.3
-            this.menObj.width = 153
-            this.menObj.height = 153
-            game.showInfo(2, 1000)
+            this.manObj.imgSrc = this.manObj.tumbleSrc
+            this.manObj.left = this.manObj.left - 10
+            // this.manObj.top = canvas.height - MAN_HEIGHT * 1.3
+            this.manObj.top = canvas.height - 153
+
+            this.manObj.width = 153
+            this.manObj.height = 153
+            this.showInfo($this, 1000)
             this.timer1()
             this.timer2(this)
           } else {
-            this.showInfo(1, 400)
+            this.showInfo($this, 400)
           }
           gameConfig.totalScore += $this.score
           gameConfig.totalScore = gameConfig.totalScore < 0 ? 0 : gameConfig.totalScore
@@ -242,7 +241,8 @@ onMounted(() => {
       }
     },
     setProperty: function (obj) {
-      let type = this.objType[Math.floor(Math.random() * game.objType.length)]
+      let type =
+        this.fallingObjectsSource[Math.floor(Math.random() * this.fallingObjectsSource.length)]
       obj.left = parseInt(Math.random() * (windowWidth - maxObjWidth))
       obj.top = -maxObjWidth
       obj.type = type.type
@@ -251,7 +251,7 @@ onMounted(() => {
       obj.isImpact = false
     },
     // 比较掉落物品是否与小人碰撞
-    impact: function (obj, menObj) {
+    impact: function (obj, manObj) {
       const o = {
         x: obj.left,
         y: obj.top,
@@ -259,10 +259,10 @@ onMounted(() => {
         h: obj.height
       }
       const d = {
-        x: menObj.left,
-        y: menObj.top,
-        w: menObj.width,
-        h: menObj.height
+        x: manObj.left,
+        y: manObj.top,
+        w: manObj.width,
+        h: manObj.height
       }
       let px
       let py
@@ -281,7 +281,7 @@ onMounted(() => {
     },
     // 开始游戏
     anim: function () {
-      // game.drawMenObj()
+      // this.drawManObj()
       if (gameConfig.isBegin && gameConfig.canMove && !gameConfig.isTumble && !gameConfig.isOver) {
         // 游戏已开始, 可以移动, 未摔倒, 未结束
         game.drawStart()
@@ -291,11 +291,11 @@ onMounted(() => {
     // 小人恢复原状，重置参数
     timer2: function (that) {
       setTimeout(() => {
-        that.menObj.imgSrc = that.menObj.defaultSrc
-        that.menObj.width = 67
-        that.menObj.height = 134
-        that.menObj.top = canvas.height - MEN_HEIGHT
-        that.menObj.left += 10
+        that.manObj.imgSrc = that.manObj.defaultSrc
+        that.manObj.width = MAN_WIDTH
+        that.manObj.height = MAN_HEIGHT
+        that.manObj.top = canvas.height - MAN_HEIGHT
+        that.manObj.left += 10
         gameConfig.isTumble = false
       }, 1000)
     },
@@ -316,13 +316,13 @@ onMounted(() => {
 
     window.addEventListener('touchstart', function (ev) {
       const oEvent = ev,
-        _left = game.menObj.left,
+        _left = game.manObj.left,
         distanceX = oEvent.changedTouches[0].clientX - _left,
         lastY = oEvent.changedTouches[0].clientY
       window.addEventListener('touchmove', function (e) {
         if (gameConfig.isBegin && gameConfig.canMove) {
-          game.menObj.left = Math.min(
-            windowWidth - game.menObj.width,
+          game.manObj.left = Math.min(
+            windowWidth - game.manObj.width,
             Math.max(0, e.changedTouches[0].clientX - distanceX)
           )
         }
@@ -336,19 +336,8 @@ onMounted(() => {
       })
     })
   })
-  console.log(
-    '%c [  ]-37-「index」',
-    'font-size:13px; background:pink; color:#bf2c9f;',
-    game,
-    gameStart
-  )
 }) // 点击触发游戏开始
 const gameStart = () => {
-  console.log(
-    '%c [  ]-312-「index」',
-    'font-size:13px; background:pink; color:#bf2c9f;',
-    'gameStart'
-  )
   gameConfig.isBegin = true
   gameConfig.canMove = true
 }
@@ -440,29 +429,29 @@ onUnmounted(() => {
       border-radius: 20px;
     }
   }
-  // &::before {
-  //   content: '';
-  //   width: 100%;
-  //   height: 55.89%;
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   z-index: 3;
-  //   background: url(./images/bg-top.png) center no-repeat;
-  //   background-size: 100% 100%;
-  // }
+  &::before {
+    content: '';
+    width: 100%;
+    height: 55.89%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background: url(./images/bg-top.png) center no-repeat;
+    background-size: 100% 100%;
+  }
 
-  // &::after {
-  //   content: '';
-  //   width: 100%;
-  //   height: 70.7%;
-  //   position: absolute;
-  //   top: 29.3%;
-  //   left: 0;
-  //   z-index: 1;
-  //   background: url(./images/bg-bottom.jpg) center no-repeat;
-  //   background-size: 100% 100%;
-  // }
+  &::after {
+    content: '';
+    width: 100%;
+    height: 70.7%;
+    position: absolute;
+    top: 29.3%;
+    left: 0;
+    z-index: 1;
+    background: url(./images/bg-bottom.jpg) center no-repeat;
+    background-size: 100% 100%;
+  }
   .btn {
     position: absolute;
     left: 50%;

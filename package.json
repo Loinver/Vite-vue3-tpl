@@ -20,6 +20,7 @@
     "commitizen": "^4.2.6",
     "cz-conventional-changelog": "^3.3.0",
     "cz-customizable": "^7.0.0",
+    "md5": "^2.3.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.18",
     "vant": "^3.5.4",

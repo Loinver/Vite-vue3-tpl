@@ -6,7 +6,7 @@
  * @LastEditors: Linyer
  * @LastEditTime: 2022-08-22 18:23:05
  */
-import { defineConfig, UserConfigExport, ConfigEnv } from 'vite'
+import { defineConfig, ConfigEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import px2vp from 'postcss-px2vp'
@@ -25,7 +25,6 @@ function handleOutDirByMode(mode) {
 
 // https://vitejs.dev/config/
 export default ({ mode, command } = ConfigEnv) => {
-  const isBuild = command === 'build'
   return defineConfig({
     base: './',
     resolve: {

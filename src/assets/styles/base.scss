@@ -1,6 +1,7 @@
 //设置所有元素盒模型宽度即为设置宽度，padding和border影响实际宽度
 html {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 *,
@@ -29,7 +30,7 @@ select,
 button,
 textarea {
   line-height: inherit;
-  -webkit-appearance: none;
+  -webkit-appearance: none; //可同时屏蔽输入框怪异的内阴影,解决iOS下无法修改按钮样式,测试还发现,加了此属性后,iOS下默认还是有圆角的,不过可以border-radius属性修改
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -61,9 +62,20 @@ textarea {
   color: #a2a2a2;
 }
 
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 //生成默认的padding 和margin 以及padding/margin(top,bottom,left,right)的5-50px中5的倍数的class
-$box-list: (pd, padding), (pdt, padding-top), (pdb, padding-bottom), (pdl, padding-left), (pdr, padding-right),
-  (mg, margin), (mgt, margin-top), (mgb, margin-bottom), (mgl, margin-left), (mgr, margin-right);
+$box-list: (pd, padding), (pdt, padding-top), (pdb, padding-bottom), (pdl, padding-left),
+  (pdr, padding-right), (mg, margin), (mgt, margin-top), (mgb, margin-bottom), (mgl, margin-left),
+  (mgr, margin-right);
 @each $box, $name in $box-list {
   @for $i from 5 through 100 {
     @if ($i % 5==0 and $i<=50) {

@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2021-03-31 10:27:05
  * @LastEditors: Linyer
- * @LastEditTime: 2022-08-11 09:36:15
+ * @LastEditTime: 2023-01-17 15:08:43
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
@@ -20,16 +20,6 @@ const routes = [
     meta: {
       auth: false,
       title: '首页',
-      keepAlive: true
-    }
-  },
-  {
-    path: '/c.html',
-    name: 'C',
-    component: () => import('../views/C/index.vue'),
-    meta: {
-      auth: false,
-      title: 'c',
       keepAlive: true
     }
   },

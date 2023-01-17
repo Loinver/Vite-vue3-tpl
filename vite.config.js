@@ -4,7 +4,7 @@
  * @Author: Linyer
  * @Date: 2022-01-10 16:44:06
  * @LastEditors: Linyer
- * @LastEditTime: 2022-08-22 18:23:05
+ * @LastEditTime: 2023-01-17 14:58:59
  */
 import { defineConfig, ConfigEnv } from 'vite'
 import path from 'path'
@@ -117,6 +117,7 @@ export default ({ mode, command } = ConfigEnv) => {
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
         }
       },
+      minify: 'terser',
       // 压缩配置
       terserOptions: {
         compress: {
